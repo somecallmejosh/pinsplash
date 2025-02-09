@@ -1,8 +1,10 @@
 <template>
-  <div class="flex h-dvh flex-col items-center justify-center">
+  <div class="flex h-dvh flex-col">
     <NuxtRouteAnnouncer />
-    <div>
-      <h1>Hello, Nuxt!</h1>
-    </div>
+    <layout-site-header />
+    <main class="flex-1">
+      <NuxtPage />
+    </main>
+    <layout-site-footer />
   </div>
 </template>
