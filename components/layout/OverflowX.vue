@@ -63,6 +63,7 @@ onBeforeUnmount(() => {
 .overflow-wrapper::after {
   content: '';
   height: 100%;
+  pointer-events: none;
   position: absolute;
   top: 0;
   width: 4rem;

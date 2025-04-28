@@ -1,41 +1,48 @@
 export default defineEventHandler(async (event) => {
   const { accessKey, photoApiBaseUrl } = useRuntimeConfig(event)
 
-  const result = await $fetch(
-    `${photoApiBaseUrl}/topics/?client_id=${accessKey}&per_page=20`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    },
-  )
+  const query = getQuery(event)
+  const page = query.page ? query.page : '1'
+  const perPage = query.per_page ? query.per_page : '16'
 
-  const photos = ({ cover_photo: photo }) => {
-    const user = photo.user
-    return {
-      photo: {
-        id: photo.id,
-        slug: photo.slug,
-        url: photo.urls.regular,
-        alt_description: photo.alt_description
-          ? photo.alt_description
-          : photo.description,
-        description: photo.description
-          ? photo.description
-          : photo.alt_description,
-        height: photo.height,
-        width: photo.width,
-      },
-      user: {
-        id: user.id,
-        name: user.name ? user.name : user.username,
-        profile_image: user.profile_image.small,
-      },
+  try {
+    const result = await $fetch(
+      `${photoApiBaseUrl}/photos/?client_id=${accessKey}&page=${page}&per_page=${perPage}`,
+    )
+    const photos = ({
+      id,
+      slug,
+      urls,
+      alt_description,
+      description,
+      height,
+      width,
+      user,
+    }) => {
+      return {
+        photo: {
+          id: id,
+          slug: slug,
+          url: urls.regular,
+          alt_description: alt_description ? alt_description : description,
+          description: description ? description : alt_description,
+          height: height,
+          width: width,
+        },
+        user: {
+          id: user.id,
+          name: user.name ? user.name : user.username,
+          profileImage: user.profile_image.small,
+        },
+      }
     }
+    const photoResults = result.map(photos)
+    return photoResults
+  } catch (error) {
+    console.error('Error fetching photos:', error)
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+    })
   }
-
-  const photoResults = result.map(photos)
-  return photoResults
-  // return result
 })

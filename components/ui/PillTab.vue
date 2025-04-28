@@ -1,11 +1,27 @@
-<script setup lang="ts">
-const props = defineProps<{
-  tag: string
-  active: boolean
-  text: string
-  image: string
-  link: string
-}>()
+<script setup>
+const props = defineProps({
+  tag: {
+    type: String,
+    required: true,
+  },
+  active: {
+    type: Boolean,
+    required: true,
+  },
+
+  text: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+  link: {
+    type: String,
+    required: true,
+  },
+})
 </script>
 <template>
   <component :is="tag">
@@ -17,10 +33,21 @@ const props = defineProps<{
         'bg-neutral-50 text-neutral-600': !active,
       }"
     >
-      <div class="size-[2.5rem] rounded-full bg-neutral-600">
-        <img :src="image" :alt="text" class="rounded-full" />
+      <div
+        class="aspect-square size-[2.5rem] shrink-0 overflow-hidden rounded-full bg-neutral-600"
+      >
+        <NuxtImg
+          :src="`${image}&w=50&h=50&fm=webp&dpr=2`"
+          :alt="text"
+          height="50"
+          width="50"
+          quality="80"
+          fit="cover"
+        />
       </div>
-      <span class="ml-2 pr-[.75rem] text-sm font-medium">{{ text }}</span>
+      <span class="pr-[.75rem] text-sm font-medium whitespace-nowrap">{{
+        text
+      }}</span>
     </NuxtLink>
   </component>
 </template>

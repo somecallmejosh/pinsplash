@@ -10,11 +10,16 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-  modules: ['@nuxt/fonts', '@nuxt/image'],
+  modules: ['@nuxt/fonts', '@nuxt/image', 'motion-v/nuxt', '@vueuse/nuxt'],
   css: ['~/assets/css/main.css'],
   fonts: {
     defaults: {
       weights: ['400', '500', '600'],
+    },
+  },
+  image: {
+    imgix: {
+      baseURL: '',
     },
   },
   vite: {
